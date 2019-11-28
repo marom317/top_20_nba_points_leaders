@@ -26,7 +26,8 @@ top20players = top20players.sort_values('PTS', ascending=True)
 name_20_lst = list(top20players.index)
 
 top_20_PTS =list(top20players.PTS)
-
+top_20_str = [str(item) for item in top_20_PTS]
+print(top_20_str)
 # filter the player column to the 20 top scoring
 
 table_20 = df_new[df_new.Player.isin(name_20_lst)]
@@ -37,10 +38,20 @@ table_20.reset_index(drop=True , inplace = True)
 
 print(table_20)
 # make the graph
+plt.figure(figsize=(15,8))
 y_pos = np.arange(len(name_20_lst))
+plt.xlabel('Total points',  fontdict = {'fontname': 'Comic Sans MS', 'fontsize' : 18})
 plt.yticks(y_pos, name_20_lst)
-plt.title('top 20 points leaders')
+plt.title('Top 20 points leaders', fontdict = {'fontname': 'Comic Sans MS', 'fontsize' : 25})
 plt.barh(y_pos, top_20_PTS)
+
+font = {'fontname': 'Comic Sans MS',
+        'color':  'red',
+        'weight': 'normal',
+        'size': 14,
+        }
+for i in range(len(name_20_lst)):
+    plt.text(x = top_20_PTS[i]-7000 , y = i-0.3, s = top_20_str[i], fontdict=font )
 plt.show()
 
 
