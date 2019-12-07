@@ -69,7 +69,7 @@ def run_bar_chart(age):
     plt.box(False)
 
 fig, ax = plt.subplots(figsize=(15, 8))
-animator = animation.FuncAnimation(fig, run_bar_chart, frames=range(22, 38),interval=1200)
+animator = animation.FuncAnimation(fig, run_bar_chart, frames=range(22, 41),interval=1200)
 HTML(animator.to_jshtml())
 plt.show()
 
