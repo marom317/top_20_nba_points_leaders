@@ -12,6 +12,7 @@ df = pd.read_csv("Seasons_Stats.csv")
 # Drop the player Eddie Johnson , Because he appears twice
 df = df[df.Player != 'Eddie Johnson']
 
+
 # Add the years, the age and 0 points for the years when the  top 20 players didn't play
 name = ['Kevin Garnett', 'John Havlicek*', 'Paul Pierce', 'Tim Duncan', 'Oscar Robertson*', 'Alex English*', 'Hakeem Olajuwon*', 'Elvin Hayes*', 'Allen Iverson*', 'Vince Carter', 'Moses Malone*', 'Dominique Wilkins*', 'LeBron James', "Shaquille O'Neal*", 'Dirk Nowitzki', 'Michael Jordan*', 'Kobe Bryant', 'Wilt Chamberlain*', 'Karl Malone*', 'Kareem Abdul-Jabbar*']
 for i in name:
