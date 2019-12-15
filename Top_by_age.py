@@ -8,43 +8,59 @@ from IPython.display import HTML
 
 df = pd.read_csv("Seasons_Stats.csv")
 
-# drop the player Eddie Johnson , Because he appears twice
-
+# Manipulate the data
+# Drop the player Eddie Johnson , Because he appears twice
 df = df[df.Player != 'Eddie Johnson']
 
-# add new column - that sum the player points till that period od time
+# Add the years, the age and 0 points for the years when the  top 20 players didn't play
+name = ['Kevin Garnett', 'John Havlicek*', 'Paul Pierce', 'Tim Duncan', 'Oscar Robertson*', 'Alex English*', 'Hakeem Olajuwon*', 'Elvin Hayes*', 'Allen Iverson*', 'Vince Carter', 'Moses Malone*', 'Dominique Wilkins*', 'LeBron James', "Shaquille O'Neal*", 'Dirk Nowitzki', 'Michael Jordan*', 'Kobe Bryant', 'Wilt Chamberlain*', 'Karl Malone*', 'Kareem Abdul-Jabbar*']
+for i in name:
+    for x in range(18,42):
+        if df[(df.Player == i) & (df.Age == x)].empty == True:
+            df = df.append({'Player': i, 'Age': x, 'PTS': 0}, ignore_index=True)
+        else:
+            pass
 
+df = df.sort_values('Age', ascending=True)
+
+
+# Add a new column - sum the player points till that period od time
 df['Total_PTS'] = df.groupby('Player')['PTS'].cumsum()
 
-# Minimize the columns to see clearly the columns that necessary
 
+# Minimize the columns to see clearly the columns that necessary
 df_new = df[['Player','Year','PTS','Age','Total_PTS']]
 
-# find who are the top 20 points scoring
 
+# Find who are the top 20 points scoring
 top20players = df_new.groupby(['Player']).sum().sort_values('PTS',ascending=False).head(20)
-# reverse the list
-top20players = top20players.sort_values('PTS', ascending=True)
-# turn the table into list with the name of the players
 
+# Reverse the list
+top20players = top20players.sort_values('PTS', ascending=True)
+
+# Turn the table into list with the name of the players
 name_20_lst = list(top20players.index)
 
 top_20_PTS =list(top20players.PTS)
 
 top_20_str = [str(item) for item in top_20_PTS]
-# filter the player column to the 20 top scoring
+
+# Filter the player column to the 20 top scoring
 
 table_20 = df_new[df_new.Player.isin(name_20_lst)]
 
-# drop the double index column
+# Drop the double index column
 
 table_20.reset_index(drop=True , inplace = True)
+
 colors = dict(zip([
-    'Kevin Garnett', 'John Havlicek*', 'Paul Pierce', 'Tim Duncan', 'Oscar Robertson*', 'Alex English*','Hakeem Olajuwon*', 'Elvin Hayes*', 'Allen Iverson*','Vince Carter',
- 'Moses Malone*', 'Dominique Wilkins*', 'LeBron James', "Shaquille O'Neal*", 'Dirk Nowitzki', 'Michael Jordan*', 'Kobe Bryant', 'Wilt Chamberlain*', 'Karl Malone*','Kareem Abdul-Jabbar*'],
-    ["#adb0ff", "#ffb3ff", "#90d595", "#e48381", "#aafbff", "#f7bb5f", "#eafb50","#adb0ff", "#ffb3ff", "#90d595", "#e48381", "#aafbff", "#f7bb5f", "#eafb50","#adb0ff", "#ffb3ff", "#90d595", "#e48381",  "#f7bb5f", "#eafb50"]))
+    'Kevin Garnett', 'John Havlicek*', 'Paul Pierce', 'Tim Duncan', 'Oscar Robertson*', 'Alex English*','Hakeem Olajuwon*', 'Elvin Hayes*',
+    'Allen Iverson*','Vince Carter','Moses Malone*', 'Dominique Wilkins*', 'LeBron James', "Shaquille O'Neal*", 'Dirk Nowitzki', 'Michael Jordan*',
+    'Kobe Bryant', 'Wilt Chamberlain*', 'Karl Malone*','Kareem Abdul-Jabbar*'],
+    ["#adb0ff", "#ffb3ff", "#90d595", "#e48381", "#aafbff", "#f7bb5f", "#eafb50","#adb0ff", "#ffb3ff", "#90d595", "#e48381", "#aafbff", "#f7bb5f",
+     "#eafb50","#adb0ff", "#ffb3ff", "#90d595", "#e48381",  "#f7bb5f", "#eafb50"]))
 
-
+# Creating the graph func
 def run_bar_chart(age):
     sf = table_20[table_20['Age'] == (age) ].sort_values(by='Total_PTS', ascending=True).tail(10)
     ax.clear()
@@ -64,12 +80,13 @@ def run_bar_chart(age):
     ax.set_axisbelow(True)
     ax.text(0, 1.15, 'The nba points leaders ',
             transform=ax.transAxes, size=24, weight=600, ha='left', va='top')
-    ax.text(1, 0, 'by Marom Turel', transform=ax.transAxes, color='#777777', ha='right',
+    ax.text(1, 0, 'By Marom Turel', transform=ax.transAxes, color='#777777', ha='right',
             bbox=dict(facecolor='white', alpha=0.8, edgecolor='white'))
     plt.box(False)
 
+# Use animation
+
 fig, ax = plt.subplots(figsize=(15, 8))
-animator = animation.FuncAnimation(fig, run_bar_chart, frames=range(22, 41),interval=1200)
+animator = animation.FuncAnimation(fig, run_bar_chart, frames=range(18, 41),interval=2200)
 HTML(animator.to_jshtml())
 plt.show()
-
